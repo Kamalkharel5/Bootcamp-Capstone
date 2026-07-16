@@ -1,0 +1,84 @@
+---
+- name: Install Linux baseline packages
+  ansible.builtin.dnf:
+    name: "{{ linux_baseline_packages }}"
+    state: present
+
+- name: Create platform service group
+  ansible.builtin.group:
+    name: "{{ linux_baseline_service_group }}"
+    state: present
+
+- name: Create platform service user
+  ansible.builtin.user:
+    name: "{{ linux_baseline_service_user }}"
+    group: "{{ linux_baseline_service_group }}"
+    comment: Bootcamp platform service account
+    create_home: true
+    shell: /bin/bash
+    state: present
+
+- name: Create service user SSH directory
+  ansible.builtin.file:
+    path: /home/{{ linux_baseline_service_user }}/.ssh
+    state: directory
+    owner: "{{ linux_baseline_service_user }}"
+    group: "{{ linux_baseline_service_group }}"
+    mode: "0700"
+
+- name: Enable and start firewall
+  ansible.builtin.service:
+    name: "{{ linux_baseline_firewall_service }}"
+    enabled: true
+    state: started
+
+- name: Allow HTTP through firewall
+  ansible.posix.firewalld:
+    service: http
+    permanent: true
+    immediate: true
+    state: enabled
+
+- name: Install capstone status page
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: "{{ linux_baseline_web_root }}/index.html"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart nginx
+
+- name: Enable and start nginx
+  ansible.builtin.service:
+    name: "{{ linux_baseline_web_service }}"
+    enabled: true
+    state: started
+
+- name: Flush handlers before verification
+  ansible.builtin.meta: flush_handlers
+
+- name: Verify nginx is responding locally
+  ansible.builtin.uri:
+    url: http://127.0.0.1
+    return_content: true
+    status_code: 200
+  register: nginx_verification
+
+- name: Verify capstone page content
+  ansible.builtin.assert:
+    that:
+      - "'Bootcamp Capstone Linux Host' in nginx_verification.content"
+    fail_msg: Nginx responded, but the capstone page was not found.
+    success_msg: Linux baseline web service verified successfully.
+
+- name: Collect service facts
+  ansible.builtin.service_facts:
+
+- name: Display Linux baseline result
+  ansible.builtin.debug:
+    msg:
+      - "Host: {{ ansible_hostname }}"
+      - "Service account: {{ linux_baseline_service_user }}"
+      - "Nginx state: {{ ansible_facts.services['nginx.service'].state }}"
+      - "Firewall state: {{ ansible_facts.services['firewalld.service'].state }}"
+      - "Verification status: HTTP {{ nginx_verification.status }}"
