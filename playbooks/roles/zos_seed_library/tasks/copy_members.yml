@@ -6,7 +6,7 @@
       "{{ hlq }}.{{ mlq }}.{{ library }}({{ member.path | basename | splitext | first | upper }})"
 # end debug
 
-- name: Copy member to {{ library }}/{{ member.path | basename }}
+- name: "Copy member to {{ [library, member.path | basename] | join('/') }}"
   block:
     - name: Copy member
       ibm.ibm_zos_core.zos_copy:
@@ -14,7 +14,7 @@
         dest: >-
           {{ hlq }}.{{ mlq }}.{{ library }}({{ member.path | basename | splitext | first | upper }})
         remote_src: false
-      register: copy_result
+      register: zos_seed_library_copy_result
   rescue:
     - name: Report failure
       ansible.builtin.debug:

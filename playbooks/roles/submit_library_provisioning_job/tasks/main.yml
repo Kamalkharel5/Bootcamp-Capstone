@@ -2,7 +2,7 @@
 # Demonstrates how to set up a playbook as an orchestrator
 # to invoke one or more roles repeatedly to carry out a
 # series of similar operations. 
-# 
+#
 # In this case, the operation is to delete and (re)allocate
 # z/OS source libraries such as an application developer
 # would normally use in their work, such as:
@@ -23,6 +23,7 @@
   ansible.builtin.template:
     src: provdev.jcl.j2
     dest: "{{ submit_library_provisioning_job_jcl_path }}"
+    mode: "0644"
   delegate_to: localhost
 
 - name: Delete temporary JCL dataset
