@@ -1,9 +1,9 @@
 ---
 - name: Ping z/OS node
-  ping: {}
+  ansible.builtin.ping: {}
   register: result
   environment: "{{ environment_vars }}"
    
 - name: Response
-  debug:
+  ansible.builtin.debug:
     msg: "{{ result.ping }}"
