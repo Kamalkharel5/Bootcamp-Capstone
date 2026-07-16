@@ -8,7 +8,7 @@
     - name: Pinging host
       ping: {}
       register: result
-      
+
     - name: Response
       debug:
         msg: "{{ result.ping }}"

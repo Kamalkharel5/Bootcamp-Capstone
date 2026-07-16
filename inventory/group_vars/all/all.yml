@@ -1,4 +1,3 @@
-
 PYZ: "/usr/lpp/IBM/cyp/v3r11/pyz"
 ZOAU: "/usr/lpp/IBM/zoautil"
 FILE_XFER_DIR: "../data"
@@ -16,5 +15,3 @@ environment_vars:
   LANG: "C"
   PYTHONSTDINENCODING: "cp1047"
   PYTHONIOENCODING: "utf-8"
-
-
