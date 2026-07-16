@@ -3,7 +3,7 @@
   ansible.builtin.ping: {}
   register: result
   environment: "{{ environment_vars }}"
-   
+
 - name: Response
   ansible.builtin.debug:
     msg: "{{ result.ping }}"
