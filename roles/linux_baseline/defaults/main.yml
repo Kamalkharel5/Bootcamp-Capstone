@@ -1,0 +1,13 @@
+---
+linux_baseline_packages:
+  - git
+  - wget
+  - unzip
+  - firewalld
+  - nginx
+
+linux_baseline_service_user: platformsvc
+linux_baseline_service_group: platformsvc
+linux_baseline_web_service: nginx
+linux_baseline_firewall_service: firewalld
+linux_baseline_web_root: /usr/share/nginx/html
