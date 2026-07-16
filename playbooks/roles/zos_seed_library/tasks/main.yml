@@ -1,5 +1,4 @@
 ---
-
 # debug
 - name: Show library
   ansible.builtin.debug:

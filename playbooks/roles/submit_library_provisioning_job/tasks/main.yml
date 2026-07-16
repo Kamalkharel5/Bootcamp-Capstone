@@ -1,18 +1,19 @@
-#------------------------------------------------------------
+---
+# ------------------------------------------------------------
 # Demonstrates how to set up a playbook as an orchestrator
 # to invoke one or more roles repeatedly to carry out a
-# series of similar operations. 
+# series of similar operations.
 #
 # In this case, the operation is to delete and (re)allocate
 # z/OS source libraries such as an application developer
 # would normally use in their work, such as:
-#  
+#
 # USER55.DEV.COBOL
 # USER55.TST.COBOL
 # USER55.DEV.JCL
 # USER55.TST.JCL
-#  
-#------------------------------------------------------------
+#
+# ------------------------------------------------------------
 
 - name: Set temporary JCL paths
   ansible.builtin.set_fact:
@@ -60,5 +61,3 @@
     msg:
       - "Library: {{ hlq }}.{{ library.mlq }}.{{ library.libname }}"
       - "Job ID : {{ submit_library_provisioning_job_job_result.jobs[0].job_id }}"
-
-
