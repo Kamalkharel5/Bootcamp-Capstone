@@ -18,9 +18,6 @@
       - DEV
       - TEST
 
-    # racf_group: TEAM01
-    # connect_users_to_racf_group: false
-
   tasks:
     - name: Create DEV and TEST JCL libraries
       ibm.ibm_zos_core.zos_data_set:
@@ -39,7 +36,7 @@
         label: "{{ item.0 }}.{{ item.1 }}.JCL"
       register: library_results
 
-    - name: Display DEV and TEST library results
+    - name: Display DEV and TEST library creation results
       ansible.builtin.debug:
         msg: >-
           Library {{ item.item.0 }}.{{ item.item.1 }}.JCL
@@ -48,18 +45,19 @@
       loop_control:
         label: "{{ item.item.0 }}.{{ item.item.1 }}.JCL"
 
-    # - name: Connect users to RACF group TEAM01
-    #   ibm.ibm_zos_core.zos_tso_command:
-    #     commands:
-    #       - "CONNECT {{ item }} GROUP({{ racf_group }})"
-    #     max_rc: 4
-    #   loop: "{{ user_hlqs }}"
-    #   loop_control:
-    #     label: "Connect {{ item }} to {{ racf_group }}"
-    #   when: connect_users_to_racf_group | bool
-    #   register: racf_group_results
+    - name: Verify DEV and TEST libraries exist
+      ibm.ibm_zos_core.zos_tso_command:
+        commands:
+          - "LISTCAT ENTRIES('{{ item.0 }}.{{ item.1 }}.JCL')"
+      loop: "{{ user_hlqs | product(environments) | list }}"
+      loop_control:
+        label: "{{ item.0 }}.{{ item.1 }}.JCL"
+      register: verify_results
 
-    # - name: Display RACF group connection results
-    #   ansible.builtin.debug:
-    #     var: racf_group_results
-    #   when: connect_users_to_racf_group | bool
+    - name: Display LISTCAT output
+      ansible.builtin.debug:
+        var: item.output
+      loop: "{{ verify_results.results }}"
+      loop_control:
+        label: "{{ item.item.0 }}.{{ item.item.1 }}.JCL"
+        
