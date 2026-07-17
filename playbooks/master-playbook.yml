@@ -2,13 +2,11 @@
 - name: Master Playbook for Ansible
   hosts: zoslab
   gather_facts: false
+  environment: "{{ environment_vars }}"
   tasks:
     - name: Bootstrap message
       ansible.builtin.debug:
         msg: "Starting master playbook --"
-
-    - name: Ping ZOS
-      ansible.builtin.include_tasks: zos_ping.yml
 
     - name: Create Team, Users, and Verify
       ansible.builtin.include_tasks: create_team01_and_users_verify.yml
@@ -46,8 +44,3 @@
           - ASM
           - COBOL
           - REXX
-
-    - name: Submit JCL
-      ansible.builtin.include_tasks: submit_local_jcl.yml
-      vars:
-        hlq: "{{ hlq }}"
