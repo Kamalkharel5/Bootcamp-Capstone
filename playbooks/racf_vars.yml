@@ -1,0 +1,20 @@
+racf_group: TEAM01
+group_owner: IBMUSER
+default_password: NEWPASS
+
+users:
+  - userid: USER01
+    name: "Development User 01"
+  - userid: USER02
+    name: "Development User 02"
+  - userid: USER03
+    name: "Development User 03"
+
+user_hlqs:
+  - USER01
+  - USER02
+  - USER03
+environments:
+  - DEV
+  - TEST
+libraries: "{{ user_hlqs | product(environments) | list }}"
