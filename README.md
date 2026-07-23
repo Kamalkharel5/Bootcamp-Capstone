@@ -8,7 +8,7 @@ This project uses Ansible playbooks to add users (USER01, USER02, and USER03) to
 - Andrew Cook
 - John DeLuce
 - Jeremy Griffith
-- Kamal Karel
+- Kamal Kharel
 
 # Tools Used
 - Ansible
